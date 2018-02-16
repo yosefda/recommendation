@@ -1,0 +1,21 @@
+{
+    "name": "yosefda/Recommendation",
+    "description": "Movie showings recommendation",
+    "license": "MIT",
+    "keywords": ["recommendation"],
+    "authors": [
+        {
+            "name": "Yosef da Iry",
+            "email": "yosefda@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "7.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yosefda\\Recommendation\\": "src"
+        }
+    }
+}
