@@ -13,6 +13,7 @@ interface IParser
     /**
      * Parse the data source.
      * @return iterable
+     * @throws \RuntimeException
      */
     public function parse();
 }

@@ -36,7 +36,7 @@ class AcmeMovieShowingsParserTest extends PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException DomainException
+     * @expectedException RuntimeException
      * @expectedExceptionMessage Failed to parse JSON, reason:
      */
     public function testParseBrokenJSON()

@@ -30,7 +30,7 @@ class AcmeMovieShowingsParser implements IParser
     /**
      * Parse the data source.
      * @return MovieShowing[]
-     * @throws \DomainException
+     * @throws \RuntimeException
      */
     public function parse()
     {
@@ -44,7 +44,7 @@ class AcmeMovieShowingsParser implements IParser
         // decode json string
         $json_data = json_decode($this->json_string);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \DomainException("Failed to parse JSON, reason: " . json_last_error_msg());
+            throw new \RuntimeException("Failed to parse JSON, reason: " . json_last_error_msg());
         }
 
         // nothing inside
