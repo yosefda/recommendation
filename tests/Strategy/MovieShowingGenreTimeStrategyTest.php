@@ -50,11 +50,25 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
             ["18:30:00+11:00", "20:30:00+11:00"]
         );
 
+        $moonlight_result = new MovieShowing(
+            "Moonlight",
+            92,
+            ["Drama", "General"],
+            ["18:30:00+11:00"]
+        );
+
         $zootopia = new MovieShowing(
             "Zootopia",
             98,
             ["Action & Adventure", "Animation", "Comedy", "General"],
             ["19:00:00+11:00", "21:00:00+11:00"]
+        );
+
+        $zootopia_result = new MovieShowing(
+            "Zootopia",
+            98,
+            ["Action & Adventure", "Animation", "Comedy", "General"],
+            ["19:00:00+11:00"]
         );
 
         $the_martian = new MovieShowing(
@@ -64,7 +78,21 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
             ["17:30:00+11:00", "19:30:00+11:00"]
         );
 
+        $the_martian_result = new MovieShowing(
+            "The Martian",
+            92,
+            ["Science Fiction & Fantasy", "General"],
+            ["17:30:00+11:00"]
+        );
+
         $shaun_the_sheep = new MovieShowing(
+            "Shaun The Sheep",
+            80,
+            ["Animation", "Comedy", "General"],
+            ["19:00:00+11:00"]
+        );
+
+        $shaun_the_sheep_result = new MovieShowing(
             "Shaun The Sheep",
             80,
             ["Animation", "Comedy", "General"],
@@ -76,17 +104,17 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
             [
                 ["genre" => "animation", "time" => "12:00"],
                 [$moonlight, $zootopia, $the_martian, $shaun_the_sheep],
-                [$zootopia, $shaun_the_sheep]
+                [$zootopia_result, $shaun_the_sheep_result]
             ],
             [
                 ["genre" => "drama", "time" => "12:00"],
                 [$moonlight, $zootopia, $the_martian, $shaun_the_sheep],
-                [$moonlight]
+                [$moonlight_result]
             ],
             [
                 ["genre" => "general", "time" => "12:00"],
                 [$moonlight, $zootopia, $the_martian, $shaun_the_sheep],
-                [$zootopia, $moonlight, $the_martian, $shaun_the_sheep],
+                [$zootopia_result, $moonlight_result, $the_martian_result, $shaun_the_sheep_result],
             ],
             [
                 ["genre" => "horror", "time" => "12:00"],
@@ -106,8 +134,7 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
         date_default_timezone_set("Australia/Sydney");
 
         $strategy = new MovieShowingGenreTimeStrategy($criteria, $items);
-        $this->assertSame($expected_recommendations, $strategy->getRecommendations());
-
+        $this->assertEquals($expected_recommendations, $strategy->getRecommendations());
 
         date_default_timezone_set($default_timezone);
     }

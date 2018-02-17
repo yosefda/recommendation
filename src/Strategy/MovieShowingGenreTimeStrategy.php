@@ -74,8 +74,9 @@ class MovieShowingGenreTimeStrategy extends BaseStrategy
             return $recommended_items;
         }
 
-        // step 1. pick items that match the rules
         $input_timestamp = strtotime($this->time);
+
+        // step 1. pick items that match the rules
         foreach ($this->items as $item) {
             // rule #1. ignore movie which different genre
             if (!in_array($this->genre, array_map("strtolower", $item->getGenres()))) {
@@ -94,7 +95,38 @@ class MovieShowingGenreTimeStrategy extends BaseStrategy
             $recommended_items[] = $item;
         }
 
-        // step 2. If more than one recommendation is returned order them by rating
+        // step 2. rebuild recommended items by picking the closest next showing time
+        $temp_recommendend_items = $recommended_items;
+        $recommended_items = [];
+        foreach ($temp_recommendend_items as $item) {
+            $closest_next_showing = "";
+            foreach ($item->getShowings() as $showing) {
+                if (empty($closest_next_showing)) {
+                    // 1st showing in the list
+                    $closest_next_showing = $showing;
+                    continue;
+                }
+
+                // use the current showing if the previous closest value is negative or
+                // current showing is closest to the given input time
+                $closest_diff = strtotime($closest_next_showing) - $input_timestamp;
+                $current_diff = strtotime($showing) - $input_timestamp;
+                if ($closest_diff < 0 || ($current_diff <= $closest_diff)) {
+                    $closest_next_showing = $showing;
+                }
+            }
+
+            // rebuild with the closest showing time
+            $recommended_items[] = new MovieShowing(
+                $item->getName(),
+                $item->getRating(),
+                $item->getGenres(),
+                [$closest_next_showing]
+            );
+        }
+
+
+        // step 3. If more than one recommendation is returned order them by rating
         if (count($recommended_items) > 1) {
             usort($recommended_items, function($a, $b) {
                 if ($a->getRating() == $b->getRating()) {
