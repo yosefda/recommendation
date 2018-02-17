@@ -34,4 +34,17 @@ class AcmeMovieShowingsParserTest extends PHPUnit\Framework\TestCase
         $parser = new AcmeMovieShowingsParser($json_string);
         $this->assertEquals($expected_output, $parser->parse());
     }
+
+    /**
+     * @expectedException DomainException
+     * @expectedExceptionMessage Failed to parse JSON, reason:
+     */
+    public function testParseBrokenJSON()
+    {
+        $json_string = file_get_contents(dirname(dirname(__FILE__)) . "/Fixtures/broken_acme_movie_showings.json");
+
+        $parser = new AcmeMovieShowingsParser($json_string);
+        $parser->parse();
+        $this->assertTrue(true);
+    }
 }
