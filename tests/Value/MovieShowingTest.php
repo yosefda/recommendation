@@ -31,25 +31,15 @@ class MovieShowingTest extends PHPUnit\Framework\TestCase
         $movie_showing = new MovieShowing($name, $rating, $genres, $showings);
     }
 
-
-    public function validObjectDataProvider()
+    public function testValidObject()
     {
-        return [
-            ["Some Movie 1", 75, ["Action", "Comedy"], [1234567890, 234567890]],
-            ["Some Movie 2", 85, ["thriller", "Horror"], [1234567890]]
-        ];
-    }
+        $movie_showing = new MovieShowing("Zootopia", 98,
+            ["Action & Adventure", "Animation", "Comedy"],
+            ["19:00:00+11:00", "21:00:00+11:00"]);
+        $this->assertSame("Zootopia", $movie_showing->getName());
+        $this->assertSame(98, $movie_showing->getRating());
 
-    /**
-     * @dataProvider validObjectDataProvider
-     */
-    public function testValidObject(string $name, int $rating, array $genres, array $showings)
-    {
-        $movie_showing = new MovieShowing($name, $rating, $genres, $showings);
-        $this->assertSame($name, $movie_showing->getName());
-        $this->assertSame($rating, $movie_showing->getRating());
-
-        $expected_genres = array_map("strtolower", $genres);
-        $this->assertSame($expected_genres, $movie_showing->getGenres());
+        $this->assertSame(["Action & Adventure", "Animation", "Comedy"], $movie_showing->getGenres());
+        $this->assertSame(["19:00:00+11:00", "21:00:00+11:00"], $movie_showing->getShowings());
     }
 }

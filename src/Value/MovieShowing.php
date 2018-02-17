@@ -7,35 +7,30 @@ namespace Yosefda\Recommendation\Value;
  * @package Yosefda\Recommendation\Value
  *
  * Value object for movie showing.
- * This is how we represent movie showing in our application.
- * The caller that store the value is expected to give the value in the expected format e.g. list of showings is in unix
- * timestamp.
- * The caller that use the value is expected to format the value as required e.g. converting showing time into a specific
- * timezone.
  */
 class MovieShowing
 {
     /**
      * @var string
-     * Name of the movie
+     * Name of the movie.
      */
     protected $name;
 
     /**
      * @var int
-     * Rating of the movie, 0 to 100
+     * Rating of the movie, 0 to 100.
      */
     protected $rating;
 
     /**
      * @var string[]
-     * Genres of the movie in lower case
+     * Genres of the movie in lower case.
      */
     protected $genres;
 
     /**
-     * @var int[]
-     * Showing schedules in unix timestamp
+     * @var string[]
+     * Showing schedules.
      */
     protected $showings;
 
@@ -43,8 +38,8 @@ class MovieShowing
      * MovieShowing constructor.
      * @param string $name
      * @param int $rating
-     * @param array $genres
-     * @param array $showings
+     * @param string[] $genres
+     * @param string[] $showings
      * @throws \InvalidArgumentException
      */
     public function __construct(string $name, int $rating, array $genres, array $showings)
@@ -61,10 +56,7 @@ class MovieShowing
         }
         $this->rating = $rating;
 
-        foreach ($genres as $genre) {
-            $this->genres[] = strtolower($genre);
-        }
-
+        $this->genres = $genres;
         $this->showings = $showings;
     }
 
@@ -97,7 +89,7 @@ class MovieShowing
 
     /**
      * Get movie showing schedules.
-     * @return int[]
+     * @return string[]
      */
     public function getShowings()
     {
