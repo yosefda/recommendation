@@ -71,6 +71,13 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
             ["19:00:00+11:00"]
         );
 
+        $zootopia_result_later = new MovieShowing(
+            "Zootopia",
+            98,
+            ["Action & Adventure", "Animation", "Comedy", "General"],
+            ["21:00:00+11:00"]
+        );
+
         $the_martian = new MovieShowing(
             "The Martian",
             92,
@@ -118,6 +125,18 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
             ],
             [
                 ["genre" => "horror", "time" => "12:00"],
+                [$moonlight, $zootopia, $the_martian, $shaun_the_sheep],
+                [],
+            ],
+            [
+                // earliest showing time already past, choose the next showing time
+                ["genre" => "animation", "time" => "19:00"],
+                [$moonlight, $zootopia, $the_martian, $shaun_the_sheep],
+                [$zootopia_result_later],
+            ],
+            [
+                // no more movie for the day
+                ["genre" => "drama", "time" => "23:00"],
                 [$moonlight, $zootopia, $the_martian, $shaun_the_sheep],
                 [],
             ],

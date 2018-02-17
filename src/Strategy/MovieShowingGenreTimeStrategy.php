@@ -84,15 +84,18 @@ class MovieShowingGenreTimeStrategy extends BaseStrategy
             }
 
             // rule #2. ignore movies which showing time no later than 30 minutes after the input time
+            $valid_showing_time = false;
             foreach ($item->getShowings() as $showing) {
                 $showing_timestamp = strtotime($showing);
                 $interval_with_input_timestamp = $showing_timestamp - $input_timestamp;
-                if ($interval_with_input_timestamp < self::ALLOWED_SHOWING_TIME_INTERVAL) {
-                    continue;
+                if ($interval_with_input_timestamp >= self::ALLOWED_SHOWING_TIME_INTERVAL) {
+                    $valid_showing_time = true;
                 }
             }
 
-            $recommended_items[] = $item;
+            if ($valid_showing_time) {
+                $recommended_items[] = $item;
+            }
         }
 
         // step 2. rebuild recommended items by picking the closest next showing time
@@ -100,29 +103,41 @@ class MovieShowingGenreTimeStrategy extends BaseStrategy
         $recommended_items = [];
         foreach ($temp_recommendend_items as $item) {
             $closest_next_showing = "";
-            foreach ($item->getShowings() as $showing) {
-                if (empty($closest_next_showing)) {
-                    // 1st showing in the list
-                    $closest_next_showing = $showing;
-                    continue;
-                }
+            $showings = $item->getShowings();
 
-                // use the current showing if the previous closest value is negative or
-                // current showing is closest to the given input time
-                $closest_diff = strtotime($closest_next_showing) - $input_timestamp;
-                $current_diff = strtotime($showing) - $input_timestamp;
-                if ($closest_diff < 0 || ($current_diff <= $closest_diff)) {
-                    $closest_next_showing = $showing;
+            if (count($showings) === 1) {
+                // only has 1 showing time, use the showing time if it's later than the input time
+                if (strtotime($showings[0]) - $input_timestamp > 0) {
+                    $closest_next_showing = $showings[0];
+                }
+            } else {
+                foreach ($item->getShowings() as $showing) {
+                    if (empty($closest_next_showing)) {
+                        // 1st showing in the list
+                        $closest_next_showing = $showing;
+                        continue;
+                    }
+
+                    // use the current showing if the previous closest diff <= 0 (already past)
+                    // current showing is closest to the given input time
+                    $closest_diff = strtotime($closest_next_showing) - $input_timestamp;
+                    $current_diff = strtotime($showing) - $input_timestamp;
+                    if ($closest_diff <= 0 || (($current_diff <= $closest_diff))) {
+                        $closest_next_showing = $showing;
+                    }
                 }
             }
 
-            // rebuild with the closest showing time
-            $recommended_items[] = new MovieShowing(
-                $item->getName(),
-                $item->getRating(),
-                $item->getGenres(),
-                [$closest_next_showing]
-            );
+            // only recommend movies that are still showing
+            if (!empty($closest_next_showing)) {
+                $recommended_items[] = new MovieShowing(
+                    $item->getName(),
+                    $item->getRating(),
+                    $item->getGenres(),
+                    [$closest_next_showing]
+                );
+            }
+
         }
 
 
