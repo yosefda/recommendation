@@ -1,4 +1,5 @@
 # composer install
+echo "\n\n"
 echo ">>>>> Running composer install..."
 composer install
 
