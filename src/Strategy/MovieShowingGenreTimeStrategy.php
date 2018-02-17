@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kapalselam
- * Date: 17/02/2018
- * Time: 5:08 AM
- */
 
 namespace Yosefda\Recommendation\Strategy;
 
