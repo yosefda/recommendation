@@ -50,24 +50,19 @@ class MovieShowingGenreTimeStrategy extends BaseStrategy
     protected $time;
 
     /**
-     * MovieShowingGenreTimeStrategy constructor.
+     * Get recommended items.
      * @param string[] $criteria Required criteria to calculate the recommended items
-     * @param MovieShowing[] $items List of items from which recommendation is to be made
+     * @param iterable $items List of items from which recommendation is to be made
+     * @return iterable
+     * @throws \InvalidArgumentException
      */
-    public function __construct(array $criteria, iterable $items)
+    public function getRecommendations(array $criteria, iterable $items)
     {
-        parent::__construct($criteria, $items);
+        parent::getRecommendations($criteria, $items);
 
         $this->genre = strtolower($criteria[self::CRITERIA_GENRE]);
         $this->time = $criteria[self::CRITERIA_TIME];
-    }
 
-    /**
-     * Get recommendations.
-     * @return MovieShowing[]
-     */
-    public function getRecommendations()
-    {
         $recommended_items = [];
 
         if (empty($this->items)) {

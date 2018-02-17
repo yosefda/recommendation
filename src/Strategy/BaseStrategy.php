@@ -23,12 +23,13 @@ abstract class BaseStrategy
     protected $items;
 
     /**
-     * BaseStrategy constructor.
+     * Get recommended items.
      * @param string[] $criteria Required criteria to calculate the recommended items
      * @param iterable $items List of items from which recommendation is to be made
+     * @return iterable
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $criteria, iterable $items)
+    public function getRecommendations(array $criteria, iterable $items)
     {
         $missing_criteria = $this->getMissingCriteria($criteria);
         if (!empty($missing_criteria)) {
@@ -37,12 +38,6 @@ abstract class BaseStrategy
 
         $this->items = $items;
     }
-
-    /**
-     * Get recommended items.
-     * @return iterable
-     */
-    abstract public function getRecommendations();
 
     /**
      * Get any missing required criteria.

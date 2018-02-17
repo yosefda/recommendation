@@ -13,36 +13,22 @@ use Yosefda\Recommendation\Value\MovieShowing;
 class AcmeMovieShowingsParser implements IParser
 {
     /**
-     * @var string
-     * JSON string of the moving showings data.
-     */
-    protected $json_string;
-
-    /**
-     * AcmeMovieShowingsParser constructor.
-     * @param string $json_string
-     */
-    public function __construct(string $json_string)
-    {
-        $this->json_string = $json_string;
-    }
-
-    /**
      * Parse the data source.
+     * @param string $json_string JSON string to parse
      * @return MovieShowing[]
      * @throws \RuntimeException
      */
-    public function parse()
+    public function parse(string $json_string)
     {
         $movie_showings = [];
 
         // empty JSON string
-        if (empty($this->json_string)) {
+        if (empty($json_string)) {
             return $movie_showings;
         }
 
         // decode json string
-        $json_data = json_decode($this->json_string);
+        $json_data = json_decode($json_string);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException("Failed to parse JSON, reason: " . json_last_error_msg());
         }

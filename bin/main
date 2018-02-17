@@ -11,7 +11,7 @@
  * "time" is string of time we want in 24 hours format e.g. 12:00, 23:00.
  *
  */
-require_once '../vendor/autoload.php';
+require_once dirname(dirname(__FILE__)) . '/vendor/autoload.php';
 
 define("USER_DEFAULT_TIMEZONE", "Australia/Sydney");
 define("ACME_DATA_SOURCE_URI", "https://pastebin.com/raw/cVyp3McN");
@@ -31,32 +31,20 @@ $time = $argv[2];
 // So if user entered 12:00 that means 12:00 in Australia/Sydney timezone.
 date_default_timezone_set(USER_DEFAULT_TIMEZONE);
 
-
 // Run the application
-try {
+$fetcher = new \Yosefda\Recommendation\Fetcher\GuzzleHttpFetcher(new \GuzzleHttp\Client());
+$parser = new \Yosefda\Recommendation\Parser\AcmeMovieShowingsParser();
+$strategy = new \Yosefda\Recommendation\Strategy\MovieShowingGenreTimeStrategy();
 
-    // step 1. fetch data source JSON
-    $fetcher = new \Yosefda\Recommendation\Fetcher\GuzzleHttpFetcher(new \GuzzleHttp\Client());
-    $data_source_json_string = $fetcher->fetch(ACME_DATA_SOURCE_URI);
+$runner = new \Yosefda\Recommendation\Runner\Main(
+    ["genre" => $genre, "time" => $time],
+    ACME_DATA_SOURCE_URI,
+    $fetcher,
+    $parser,
+    $strategy
+);
 
-    // step 2. parse the JSON
-    $parser = new \Yosefda\Recommendation\Parser\AcmeMovieShowingsParser($data_source_json_string);
-    $movie_showings = $parser->parse();
-
-    // step 3.
-    $criteria = ["genre" => $genre, "time" => $time];
-    $strategy = new \Yosefda\Recommendation\Strategy\MovieShowingGenreTimeStrategy(
-        $criteria,
-        $movie_showings
-    );
-    $recommended_movies = $strategy->getRecommendations();
-
-    print_recommendations($recommended_movies);
-
-} catch (Exception $ex) {
-    echo "Application error: {$ex->getMessage()}" . PHP_EOL;
-    exit(1);
-}
+echo $runner->run() . PHP_EOL;
 
 exit(0);
 
@@ -74,21 +62,4 @@ function print_usage()
     echo "\"time\" is string of time we want in 24 hours format e.g. 12:00, 23:00." . PHP_EOL;
     echo PHP_EOL;
 }
-
-function print_recommendations(iterable $recommended_movies)
-{
-    if (empty($recommended_movies)) {
-        echo "no movie recommendations" . PHP_EOL;
-        return;
-    }
-
-    // print movie name and the closest showing time
-    foreach ($recommended_movies as $movie) {
-        $showings = $movie->getShowings();
-        $showing_time = date("g:ia", strtotime($showings[0]));
-        echo "{$movie->getName()}, showing at {$showing_time}" . PHP_EOL;
-    }
-}
-
-
 

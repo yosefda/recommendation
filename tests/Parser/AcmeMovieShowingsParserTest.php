@@ -31,8 +31,8 @@ class AcmeMovieShowingsParserTest extends PHPUnit\Framework\TestCase
      */
     public function testParse(string $json_string, iterable $expected_output)
     {
-        $parser = new AcmeMovieShowingsParser($json_string);
-        $this->assertEquals($expected_output, $parser->parse());
+        $parser = new AcmeMovieShowingsParser();
+        $this->assertEquals($expected_output, $parser->parse($json_string));
     }
 
     /**
@@ -43,8 +43,7 @@ class AcmeMovieShowingsParserTest extends PHPUnit\Framework\TestCase
     {
         $json_string = file_get_contents(dirname(dirname(__FILE__)) . "/Fixtures/broken_acme_movie_showings.json");
 
-        $parser = new AcmeMovieShowingsParser($json_string);
-        $parser->parse();
-        $this->assertTrue(true);
+        $parser = new AcmeMovieShowingsParser();
+        $parser->parse($json_string);
     }
 }

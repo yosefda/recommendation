@@ -12,8 +12,9 @@ interface IParser
 {
     /**
      * Parse the data source.
+     * @param string $json_string JSON string to parse
      * @return iterable
      * @throws \RuntimeException
      */
-    public function parse();
+    public function parse(string $json_string);
 }

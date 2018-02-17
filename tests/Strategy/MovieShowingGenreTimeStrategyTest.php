@@ -18,9 +18,10 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
      * @expectedExceptionMessage Missing required criteria 'genre'
      * @dataProvider missingGenreDataProvider
      */
-    public function testConstructMissingGenre(array $criteria, iterable $items)
+    public function testGetRecommendationsMissingGenre(array $criteria, iterable $items)
     {
-        $strategy = new MovieShowingGenreTimeStrategy($criteria, $items);
+        $strategy = new MovieShowingGenreTimeStrategy();
+        $strategy->getRecommendations($criteria, $items);
     }
 
     public function missingTimeDataProvider()
@@ -36,9 +37,10 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
      * @expectedExceptionMessage Missing required criteria 'time'
      * @dataProvider missingTimeDataProvider
      */
-    public function testConstructMissingTime(array $criteria, iterable $items)
+    public function testGetRecommendationsMissingTime(array $criteria, iterable $items)
     {
-        $strategy = new MovieShowingGenreTimeStrategy($criteria, $items);
+        $strategy = new MovieShowingGenreTimeStrategy();
+        $strategy->getRecommendations($criteria, $items);
     }
 
     public function getRecommendationsDataProvider()
@@ -153,7 +155,7 @@ class MovieShowingGenreTimeStrategyTest extends PHPUnit\Framework\TestCase
         date_default_timezone_set("Australia/Sydney");
 
         $strategy = new MovieShowingGenreTimeStrategy($criteria, $items);
-        $this->assertEquals($expected_recommendations, $strategy->getRecommendations());
+        $this->assertEquals($expected_recommendations, $strategy->getRecommendations($criteria, $items));
 
         date_default_timezone_set($default_timezone);
     }
