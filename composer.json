@@ -19,5 +19,6 @@
         "psr-4": {
             "Yosefda\\Recommendation\\": "src"
         }
-    }
+    },
+    "bin": ["bin/main"]
 }
