@@ -28,6 +28,6 @@ php phar-composer.phar build . dist
 
 echo ">>>>> dist/Recommendation.phar disted"
 
-RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m' # No Color
-echo ">>>>> To run it: ${RED}php dist/Recommendation.phar <genre> <time>${NC}"
+echo ">>>>> To run it: ${GREEN}php dist/Recommendation.phar <genre> <time>${NC}"
